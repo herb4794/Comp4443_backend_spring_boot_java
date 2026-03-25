@@ -1,5 +1,7 @@
 package comp4443.booking_app.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,8 @@ public class User {
 
   private String username;
   private String password;
+
+  private LocalDateTime createdAt = LocalDateTime.now();
 
   private int role; // 1=user, 0=admin
 
@@ -49,5 +53,9 @@ public class User {
 
   public void setRole(int role) {
     this.role = role;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
   }
 }
