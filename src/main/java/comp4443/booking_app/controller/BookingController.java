@@ -29,6 +29,7 @@ public class BookingController {
   public ResponseEntity<?> create(@RequestBody Booking booking) {
     System.out.println("ROOM ID: " + booking.getRoomId());
     System.out.println("USER ID: " + booking.getUserId());
+    
     try {
       Booking saved = bookingService.createBooking(booking);
       return ResponseEntity.ok(saved);

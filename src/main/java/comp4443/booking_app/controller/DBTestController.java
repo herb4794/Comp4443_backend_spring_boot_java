@@ -2,7 +2,6 @@ package comp4443.booking_app.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-
 import java.sql.*;
 import java.util.*;
 
@@ -11,7 +10,7 @@ import java.util.*;
 
 public class DBTestController {
   @GetMapping("/db")
- 
+
   public Map<String, Object> testDB() {
 
     Map<String, Object> result = new HashMap<>();
@@ -25,11 +24,10 @@ public class DBTestController {
       result.put("status", "connected");
 
       Statement stmt = conn.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM users LIMIT 2");
-
+      ResultSet rs = stmt.executeQuery("SELECT * FROM users LIMIT 2");            
       if (rs.next()) {
         result.put("name = ", rs.getString("name"));
-
+      
       }
 
       conn.close();

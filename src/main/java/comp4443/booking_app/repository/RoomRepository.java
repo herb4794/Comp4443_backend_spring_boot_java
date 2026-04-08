@@ -7,5 +7,7 @@ import comp4443.booking_app.entity.Room;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
+  
+  
 
 }
