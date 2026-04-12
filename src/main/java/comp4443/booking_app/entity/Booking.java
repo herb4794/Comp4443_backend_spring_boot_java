@@ -60,5 +60,4 @@ public class Booking {
   public void setCheckOut(LocalDate checkOut) {
     this.checkOut = checkOut;
   }
-
 }
