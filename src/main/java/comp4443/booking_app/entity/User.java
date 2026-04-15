@@ -15,13 +15,12 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private String username;
   private String password;
-
   private LocalDateTime createdAt = LocalDateTime.now();
-
   private int role; // 1=user, 0=admin
+  private String resetToken;
+  private LocalDateTime resetTokenExpiry;
 
   public Long getId() {
     return id;
@@ -37,6 +36,18 @@ public class User {
 
   public int getRole() {
     return role;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public String getResetToken() {
+    return resetToken;
+  }
+
+  public LocalDateTime getResetTokenExpiry() {
+    return resetTokenExpiry;
   }
 
   public void setId(Long id) {
@@ -55,7 +66,11 @@ public class User {
     this.role = role;
   }
 
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
+  public void setResetToken(String resetToken) {
+    this.resetToken = resetToken;
+  }
+
+  public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+    this.resetTokenExpiry = resetTokenExpiry;
   }
 }

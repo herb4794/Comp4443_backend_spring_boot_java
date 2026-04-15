@@ -13,9 +13,14 @@ public class Room {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  private String description;
 
   private String name;
   private Double price;
+
+  public String getDescription() {
+    return description;
+  }
 
   public Long getId() {
     return id;
@@ -39,5 +44,9 @@ public class Room {
 
   public void setPrice(Double price) {
     this.price = price;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

@@ -8,7 +8,8 @@ import comp4443.booking_app.entity.User;
 import comp4443.booking_app.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
-
+import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.Map;
 
 @RestController
@@ -122,5 +123,81 @@ public class UserController {
     session.invalidate();
     return ResponseEntity.ok(Map.of(
         "message", "Signed out"));
+  }
+
+  @PostMapping("/forgot-password")
+  public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
+    String email = body.get("email");
+
+    if (email == null || email.isBlank()) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Email is required"));
+    }
+
+    User user = userRepository.findByUsername(email).orElse(null);
+
+    if (user == null) {
+      return ResponseEntity.ok(Map.of(
+          "message", "If the account exists, a reset token has been generated."));
+    }
+
+    String token = UUID.randomUUID().toString();
+    LocalDateTime expiry = LocalDateTime.now().plusMinutes(15);
+
+    user.setResetToken(token);
+    user.setResetTokenExpiry(expiry);
+    userRepository.save(user);
+
+    return ResponseEntity.ok(Map.of(
+        "message", "Reset token generated",
+        "resetToken", token,
+        "expiresAt", expiry.toString()));
+  }
+
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+    String token = body.get("token");
+    String newPassword = body.get("newPassword");
+    String confirmPassword = body.get("confirmPassword");
+
+    if (token == null || token.isBlank()) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Token is required"));
+    }
+
+    if (newPassword == null || newPassword.isBlank()) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "New password is required"));
+    }
+
+    if (confirmPassword == null || confirmPassword.isBlank()) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Confirm password is required"));
+    }
+
+    if (!newPassword.equals(confirmPassword)) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Passwords do not match"));
+    }
+
+    User user = userRepository.findByResetToken(token).orElse(null);
+
+    if (user == null) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Invalid token"));
+    }
+
+    if (user.getResetTokenExpiry() == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Token has expired"));
+    }
+
+    user.setPassword(newPassword);
+    user.setResetToken(null);
+    user.setResetTokenExpiry(null);
+    userRepository.save(user);
+
+    return ResponseEntity.ok(Map.of(
+        "message", "Password reset successful"));
   }
 }
