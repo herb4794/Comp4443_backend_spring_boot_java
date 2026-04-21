@@ -19,7 +19,7 @@ public class DBTestController {
       Connection conn = DriverManager.getConnection(
           "jdbc:mysql://localhost:3306/comp4442",
           "root",
-          "");
+          "Newroot123!");
 
       result.put("status", "connected");
 
